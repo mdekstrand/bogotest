@@ -34,7 +34,7 @@ typedef struct _BTSuiteInfo {
     const char *name;
     BTFixtureInfo *fixtures;
 } BTSuiteInfo;
-#define BT_SUITE_INFO_NULL { NULL, NULL, NULL, NULL }
+#define BT_SUITE_INFO_NULL { NULL, NULL }
 
 void _bt_assert(int expr, const char *file, int line, const char *msg, ...);
 #define BT_ASSERT(expr) _bt_assert((expr), __FILE__, __LINE__, \
@@ -49,6 +49,7 @@ void _bt_assert(int expr, const char *file, int line, const char *msg, ...);
         "pointer %s is NULL", #ptr)
 #define BT_ASSERT_PTR_NOT_NULL_MESSAGE(ptr, msg, ...) _bt_assert(ptr != NULL, __FILE__, __LINE__, \
         msg, __VA_ARGS__)
+#define BT_ASSERT_EQUAL(act, exp) BT_ASSERT(exp == act)
 
 void _bt_assert_strings_equal(const char *act, const char *exp,
         const char *file, int line, const char *expr);

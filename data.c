@@ -11,13 +11,13 @@
 
 GList *_bt_suites;
 
-void
+static void
 free_test(Test *test)
 {
     g_free(test);
 }
 
-void
+static void
 free_test_fixture(TestFixture *fixture)
 {
     g_list_foreach(fixture->tests, free_test, NULL);
@@ -25,7 +25,7 @@ free_test_fixture(TestFixture *fixture)
     g_free(fixture);
 }
 
-void
+static void
 free_test_suite(TestSuite *suite)
 {
     g_list_foreach(suite->fixtures, free_test_fixture, NULL);
@@ -33,12 +33,12 @@ free_test_suite(TestSuite *suite)
     g_free(suite);
 }
 
-GList*
+static GList*
 initialize_tests(BTTestInfo *tests)
 {
     BTTestInfo *ctest;
     GList *tlist = NULL;
-    for (ctest = tests; ctest->name; ++ctest) {
+    for (ctest = tests; ctest->test; ++ctest) {
         Test *test = g_new0(Test, 1);
         test->info = ctest;
         tlist = g_list_append(tlist, test);
@@ -46,15 +46,15 @@ initialize_tests(BTTestInfo *tests)
     return tlist;
 }
 
-GList*
+static GList*
 initialize_fixtures(BTFixtureInfo *fixtures)
 {
     BTFixtureInfo *cfix;
     GList *flist = NULL;
-    for (cfix = fixtures; cfix->setup; ++cfix) {
+    for (cfix = fixtures; cfix->tests; ++cfix) {
         TestFixture *fix = g_new0(TestFixture, 1);
         fix->info = cfix;
-        fix->tests = initialize_tests(fixtures->tests);
+        fix->tests = initialize_tests(cfix->tests);
         flist = g_list_append(flist, fix);
     }
     return flist;
@@ -64,7 +64,7 @@ void
 initialize_test_suites(void)
 {
     BTSuiteInfo *si;
-    for (si = bogotest_suites; si->name; ++si) {
+    for (si = bogotest_suites; si->fixtures; ++si) {
         TestSuite *suite = g_new0(TestSuite, 1);
         suite->info = si;
         _bt_suites = g_list_append(_bt_suites, suite);

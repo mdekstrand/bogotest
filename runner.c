@@ -3,6 +3,7 @@
  ****************************************************************************/
 
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <setjmp.h>
@@ -15,15 +16,15 @@
 
 jmp_buf _bt_abort_buf;
 
-gboolean
+static gboolean
 run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
 {
     pid_t pid;
-    pid = fork();
-    if (pid < 0) {
-        perror("run_test:fork");
-        abort();
-    } else if (pid) {
+    if (_bt_verbose)
+        printf("  test: %s\n", test->info->name);
+    if (_bt_fork)
+        pid = fork();
+    if (_bt_fork && pid < 0) {
         int status;
         if (waitpid(pid, &status, 0) == -1) {
             perror("run_test:waitpid");
@@ -37,6 +38,9 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
             return FALSE;
         }
         return TRUE;
+    } else if (_bt_fork && pid) {
+        perror("run_test:fork");
+        abort();
     } else {
         gpointer fdata = NULL;
         gboolean success = TRUE;
@@ -52,11 +56,14 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
         }
         if (teardown)
             (teardown)(fdata);
-        exit(success ? EXIT_SUCCESS : EXIT_FAILURE);
+        if (_bt_fork)
+            exit(success ? EXIT_SUCCESS : EXIT_FAILURE);
+        else
+            return success;
     }
 }
 
-int
+static int
 run_test_fixture(TestFixture *fixture)
 {
     int failures = 0;
@@ -71,10 +78,12 @@ run_test_fixture(TestFixture *fixture)
     }
 }
 
-void
+static void
 run_test_suite(TestSuite* suite)
 {
     GList *cur;
+    if (_bt_verbose)
+        printf("Suite: %s\n", suite->info->name);
     cur = suite->fixtures;
     while (cur) {
         suite->failures += run_test_fixture((TestFixture*) (cur->data));
@@ -97,6 +106,8 @@ summarize_results(void)
         }
         cur = cur->next;
     }
+    if (success)
+        puts("No errors.");
     return success;
 }
 
