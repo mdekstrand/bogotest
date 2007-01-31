@@ -3,7 +3,13 @@
  ****************************************************************************/
 
 #include <stdio.h>
-#include <stdargs.h>
+#include <stdarg.h>
+#include <setjmp.h>
+
+#include <glib.h>
+
+#include "bogotest.h"
+#include "internal.h"
 
 void _bt_assert(int expr, const char *file, int line, const char *msg, ...)
 {
@@ -18,7 +24,7 @@ void _bt_assert(int expr, const char *file, int line, const char *msg, ...)
         fprintf(stderr, "%s: %s\n", lead, fmsg);
         g_free(lead);
         g_free(fmsg);
-        _bt_fail_test();
+        longjmp(_bt_abort_buf, 1);
     }
 }
 
@@ -33,7 +39,7 @@ void _bt_assert_strings_equal(const char *act, const char *exp,
 void _bt_assert_doubles_equal(double act, double exp, double delta,
         const char *file, int line, const char *expr)
 {
-    _bt_assert(fabs(act - exp) < delta, , file, line,
-            "double %f has incorrect value\n  Actual: %f\n  Expected: %f"
+    _bt_assert(fabs(act - exp) < delta, file, line,
+            "double %f has incorrect value\n  Actual: %f\n  Expected: %f",
             expr, act, exp);
 }
