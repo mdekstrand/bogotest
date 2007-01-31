@@ -24,7 +24,7 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
         printf("  test: %s\n", test->info->name);
     if (_bt_fork)
         pid = fork();
-    if (_bt_fork && pid < 0) {
+    if (_bt_fork && (pid > 0)) {
         int status;
         if (waitpid(pid, &status, 0) == -1) {
             perror("run_test:waitpid");
