@@ -1,0 +1,5 @@
+%% PASS ptr-not-null-pass
+BT_ASSERT_PTR_NOT_NULL(23);
+%% FAIL ptr-not-null-fail
+BT_ASSERT_PTR_NOT_NULL(NULL);
+%%

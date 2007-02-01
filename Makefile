@@ -6,12 +6,15 @@ OBJECTS = $(SOURCES:.c=.o)
 
 CPPFLAGS += `pkg-config --cflags glib-2.0`
 
-.PHONY: all clean
+.PHONY: all clean check
 
 all: libbogotest.a
 
 clean:
 	rm -f libbogotest.a $(OBJECTS)
+
+check: libbogotest.a
+	(cd test && ./runtests)
 
 libbogotest.a: $(OBJECTS)
 	ar rc $@ $^

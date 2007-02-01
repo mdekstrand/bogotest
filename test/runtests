@@ -1,0 +1,65 @@
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+
+my $c_tmpl = 'test.c';
+my $infile = 'tests.dat';
+
+open INFILE, $infile or die "Cannot open input file $infile";
+
+my $failures = 0;
+
+my $test_text = '';
+my $test_pass;
+my $test_name;
+while (<INFILE>) {
+    if (m/^%%/) {
+        chomp;
+        &run_test if $test_name;
+        if (m/^%% (PASS|FAIL) (.*)$/) {
+            $test_text = '';
+            $test_pass = ($1 eq 'PASS');
+            $test_name = $2;
+        } else {
+            last;
+        }
+    } else {
+        $test_text .= $_;
+    }
+}
+
+if ($failures) {
+    print "$failures tests failed.\n";
+    exit 1;
+} else {
+    print "All tests passed.\n";
+    exit 0;
+}
+
+sub run_test
+{
+    print "Running \"$test_name\": ";
+    if ($test_pass) {
+        print "expected to pass\n";
+    } else {
+        print "expected to fail\n";
+    }
+    open TEXT, ">test.text" or die "Cannot create text file";
+    print TEXT $test_text;
+    close TEXT;
+
+    system("gcc -o testprog test.c ../libbogotest.a `pkg-config --libs --cflags glib-2.0`")
+        and die "Error compiling program";
+
+    my $rv = system("./testprog");
+    if ($rv && $test_pass or !$rv && !$test_pass) {
+        print "Test \"$test_name\" failed.\n";
+        $failures += 1;
+    } else {
+        print "Success.\n";
+    }
+    unlink "testprog" or die "Cannot delete testprog";
+
+    unlink "test.text" or die "Cannot delete bad file";
+}
