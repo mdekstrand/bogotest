@@ -1,5 +1,25 @@
+%% PASS assert-true
+BT_ASSERT(1);
+%% FAIL assert-false
+BT_ASSERT(0);
 %% PASS ptr-not-null-pass
 BT_ASSERT_PTR_NOT_NULL(23);
 %% FAIL ptr-not-null-fail
 BT_ASSERT_PTR_NOT_NULL(NULL);
+%% PASS string-equal
+const char *s1 = "foo";
+char *s2;
+s2 = g_strdup(s1);
+BT_ASSERT_STRINGS_EQUAL(s1, s2);
+g_free(s2);
+%% FAIL string-equal-fail
+BT_ASSERT_STRINGS_EQUAL("foo", "bar");
+%% PASS doubles-equal
+BT_ASSERT_DOUBLES_EQUAL(5.3, 5.3);
+%% FAIL doubles-equal-fail
+BT_ASSERT_DOUBLES_EQUAL(5.3, 6.3);
+%% FAIL doubles-equal-close
+BT_ASSERT_DOUBLES_EQUAL(5.3, 5.301);
+%% PASS doubles-equal-close-good
+BT_ASSERT_DOUBLES_EQUAL(3.9, 3.9000001);
 %%
