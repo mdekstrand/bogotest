@@ -45,17 +45,22 @@ sub run_test
     } else {
         print "expected to fail\n";
     }
+    my $line = $. - 1;
     open TEXT, ">test.text" or die "Cannot create text file";
+    print TEXT "#line $line \"test.dat\"\n";
     print TEXT $test_text;
     close TEXT;
 
     system("gcc -o testprog test.c ../libbogotest.a `pkg-config --libs --cflags glib-2.0`")
         and die "Error compiling program";
 
-    my $rv = system("./testprog");
+    my $testout = `./testprog 2>&1`;
+    my $rv = $?;
     if ($rv && $test_pass or !$rv && !$test_pass) {
         print "Test \"$test_name\" failed.\n";
         $failures += 1;
+        print "Output:\n";
+        print $testout;
     } else {
         print "Success.\n";
     }
