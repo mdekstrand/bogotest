@@ -31,14 +31,14 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
             return FALSE;
         }
         if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
-            fprintf(stderr, "Test %s failed\n", test->info->name);
+            fprintf(stderr, "Test failed: %s\n", test->info->name);
             return FALSE;
         } else if (WIFSIGNALED(status)) {
-            fprintf(stderr, "Test %s died with signal %d\n", test->info->name,
-                    WTERMSIG(status));
+            fprintf(stderr, "Test terminated with signal %d: %s\n",
+                    WTERMSIG(status), test->info->name);
             return FALSE;
         } else if (!WIFEXITED(status)) {
-            fprintf(stderr, "Unknown error occured in test %s\n", test->info->name);
+            fprintf(stderr, "Test terminated erroneously: %s\n", test->info->name);
             return FALSE;
         }
         return TRUE;
