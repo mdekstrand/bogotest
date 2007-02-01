@@ -10,6 +10,9 @@ The basic idea: write your tests using the various BT_ASSERT macros.  Define an
 array, bogotest_suites, of BTSuiteInfo structures defining your test suites.
 Link against libbogotest.a, and run the resulting program.
 
+Note that bogotest uses glib, so the link line also needs the appropriate
+libraries for glib 2.x.
+
 BOGOTEST COMMAND LINE OPTIONS
 
 BogoTest's main function currently recognizes two command line options. '-v'
