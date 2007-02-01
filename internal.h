@@ -28,6 +28,7 @@ extern GList *_bt_suites;
 extern jmp_buf _bt_abort_buf;
 extern gboolean _bt_verbose;
 extern gboolean _bt_fork;
+extern gboolean _bt_fatal_failures;
 
 void initialize_test_suites(void);
 void free_test_suites(void);

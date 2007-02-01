@@ -31,7 +31,10 @@ void _bt_assert(int expr, const char *file, int line, const char *msg, ...)
         fprintf(stderr, "%s: %s\n", lead, fmsg);
         g_free(lead);
         g_free(fmsg);
-        longjmp(_bt_abort_buf, 1);
+        if (_bt_fatal_failures)
+            abort();
+        else
+            longjmp(_bt_abort_buf, 1);
     }
 }
 

@@ -18,12 +18,13 @@
 
 gboolean _bt_verbose = FALSE;
 gboolean _bt_fork = TRUE;
+gboolean _bt_fatal_failures = FALSE;
 
 int
 main(int argc, char *argv[])
 {
     int c;
-    while ((c = getopt(argc, argv, "vF")) >= 0) {
+    while ((c = getopt(argc, argv, "vFk")) >= 0) {
         switch (c) {
         case 'v':
             _bt_verbose = TRUE;
@@ -31,8 +32,15 @@ main(int argc, char *argv[])
         case 'F':
             _bt_fork = FALSE;
             break;
+        case 'k':
+            _bt_fatal_failures = TRUE;
+            break;
         }
     }
+
+    if (_bt_fatal_failures)
+        _bt_fork = FALSE;
+
     initialize_test_suites();
     if (run_all_tests())
         return EXIT_SUCCESS;
