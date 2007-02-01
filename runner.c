@@ -33,8 +33,12 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
         if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
             fprintf(stderr, "Test %s failed\n", test->info->name);
             return FALSE;
-        } else if (!WIFEXITED(pid)) {
-            fprintf(stderr, "Error occured in test %s\n", test->info->name);
+        } else if (WIFSIGNALED(status)) {
+            fprintf(stderr, "Test %s died with signal %d\n", test->info->name,
+                    WTERMSIG(status));
+            return FALSE;
+        } else if (!WIFEXITED(status)) {
+            fprintf(stderr, "Unknown error occured in test %s\n", test->info->name);
             return FALSE;
         }
         return TRUE;
@@ -68,6 +72,7 @@ run_test_fixture(TestFixture *fixture)
 {
     int failures = 0;
     GList *cur = NULL;
+    printf("Starting new fixture...\n");
 
     cur = fixture->tests;
     while (cur) {
@@ -76,6 +81,7 @@ run_test_fixture(TestFixture *fixture)
             ++failures;
         cur = cur->next;
     }
+    return failures;
 }
 
 static void
@@ -101,7 +107,7 @@ summarize_results(void)
         TestSuite *suite = (TestSuite*) (cur->data);
         if (suite->failures) {
             success = FALSE;
-            fprintf(stderr, "Suite %s had %d failures",
+            fprintf(stderr, "Suite %s had %d failures\n",
                     suite->info->name, suite->failures);
         }
         cur = cur->next;
