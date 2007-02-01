@@ -6,7 +6,9 @@ OBJECTS = $(SOURCES:.c=.o)
 
 CPPFLAGS += `pkg-config --cflags glib-2.0`
 
-.PHONY: all clean check
+PREFIX ?= /usr/local
+
+.PHONY: all clean check install
 
 all: libbogotest.a
 
@@ -15,6 +17,12 @@ clean:
 
 check: libbogotest.a
 	(cd test && ./runtests)
+
+install:
+	install -d $(DESTDIR)$(PREFIX)/include
+	install -d $(DESTDIR)$(PREFIX)/lib
+	install bogotest.h $(DESTDIR)$(PREFIX)/include
+	install libbogotest.a $(DESTDIR)$(PREFIX)/lib
 
 libbogotest.a: $(OBJECTS)
 	ar rc $@ $^

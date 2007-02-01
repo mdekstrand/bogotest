@@ -1,0 +1,27 @@
+Bogus Testing Framework - a unit testing framework for C
+
+This framework was written to take the best ideas from CUnit, Check, and the
+various xUnit systems.  Features include:
+ * Fixtures with setup and teardown functions
+ * Forking - each test runs in its own process
+ * Pre-written main function - all you write are tests
+
+The basic idea: write your tests using the various BT_ASSERT macros.  Define an
+array, bogotest_suites, of BTSuiteInfo structures defining your test suites.
+Link against libbogotest.a, and run the resulting program.
+
+BOGOTEST COMMAND LINE OPTIONS
+
+BogoTest's main function currently recognizes two command line options. '-v'
+turns on verbose output.  '-F' disables forking (useful for debugging a failing
+test).
+
+GENERAL HINTS
+
+I find it useful to just clone the bogotest tree in to a subdirectory of my
+project's source tree and reference it there.
+
+INSTALLATION
+
+If you really feel like installing the library somehow, you can type `make
+install` to install it to $PREFIX (defaults to /usr/local).

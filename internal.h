@@ -1,5 +1,10 @@
 /*****************************************************************************
  * internal.h - internal structures and declarations
+ *
+ * Copyright (c) 2007 Michael Ekstrand
+ *
+ * This file is freely distributable, so long as the above copyright notice
+ * remains intact; see the file COPYING for details.
  ****************************************************************************/
 
 typedef struct _Test {

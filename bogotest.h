@@ -3,6 +3,11 @@
  *
  * BogoTest (The Bogus Testing Framework for C) is a unit-testing framework
  * for C programmers.
+ *
+ * Copyright (c) 2007 Michael Ekstrand
+ *
+ * This file is freely distributable, so long as the above copyright notice
+ * remains intact; see the file COPYING for details.
  ****************************************************************************/
 
 #ifndef BOGOTEST_H

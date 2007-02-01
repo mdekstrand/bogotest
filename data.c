@@ -1,5 +1,10 @@
 /*****************************************************************************
  * data.c - data structures in BogoTest
+ *
+ * Copyright (c) 2007 Michael Ekstrand
+ *
+ * This file is freely distributable, so long as the above copyright notice
+ * remains intact; see the file COPYING for details.
  ****************************************************************************/
 
 #include <setjmp.h>
