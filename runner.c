@@ -72,7 +72,6 @@ run_test_fixture(TestFixture *fixture)
 {
     int failures = 0;
     GList *cur = NULL;
-    printf("Starting new fixture...\n");
 
     cur = fixture->tests;
     while (cur) {
