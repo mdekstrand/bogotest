@@ -25,7 +25,7 @@ free_test(Test *test)
 static void
 free_test_fixture(TestFixture *fixture)
 {
-    g_list_foreach(fixture->tests, free_test, NULL);
+    g_list_foreach(fixture->tests, (GFunc) free_test, NULL);
     g_list_free(fixture->tests);
     g_free(fixture);
 }
@@ -33,7 +33,7 @@ free_test_fixture(TestFixture *fixture)
 static void
 free_test_suite(TestSuite *suite)
 {
-    g_list_foreach(suite->fixtures, free_test_fixture, NULL);
+    g_list_foreach(suite->fixtures, (GFunc) free_test_fixture, NULL);
     g_list_free(suite->fixtures);
     g_free(suite);
 }
@@ -68,7 +68,7 @@ initialize_fixtures(BTFixtureInfo *fixtures)
 void
 initialize_test_suites(void)
 {
-    BTSuiteInfo *si;
+    const BTSuiteInfo *si;
     for (si = bogotest_suites; si->fixtures; ++si) {
         TestSuite *suite = g_new0(TestSuite, 1);
         suite->info = si;
@@ -80,7 +80,7 @@ initialize_test_suites(void)
 void
 free_test_suites(void)
 {
-    g_list_foreach(_bt_suites, free_test_suite, NULL);
+    g_list_foreach(_bt_suites, (GFunc) free_test_suite, NULL);
     g_list_free(_bt_suites);
     _bt_suites = NULL;
 }
