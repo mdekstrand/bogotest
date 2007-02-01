@@ -18,9 +18,11 @@
 #endif
 
 typedef void (*BTTestFunc)(gpointer);
+#define BT_TEST_FUNC(func) ((BTTestFunc) (func))
 typedef gpointer (*BTTestSetupFunc)(void);
+#define BT_TEST_SETUP_FUNC(func) ((BTTestSetupFunc) (func))
 typedef void (*BTTestTeardownFunc)(gpointer);
-typedef gboolean (*BTSuiteFunc)(void);
+#define BT_TEST_TEARDOWN_FUNC(func) ((BTTestTeardownFunc) (func))
 
 typedef struct _BTTestInfo {
     const char *name;
