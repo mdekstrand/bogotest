@@ -65,10 +65,13 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
         }
         if (teardown)
             (teardown)(fdata);
-        if (_bt_fork)
+        if (_bt_fork) {
             exit(success ? EXIT_SUCCESS : EXIT_FAILURE);
-        else
+        } else {
+            if (!_bt_fork && !success)
+                fprintf(stderr, "Test failed: %s\n", test->info->name);
             return success;
+        }
     }
 }
 

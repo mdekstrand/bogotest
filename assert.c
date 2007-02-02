@@ -24,7 +24,7 @@ void _bt_assert(int expr, const char *file, int line, const char *msg, ...)
 
     if (!expr) {
         gchar *lead, *fmsg;
-        lead = g_strdup_printf("Failure at %s:%d", file, line);
+        lead = g_strdup_printf("%s:%d: test failed", file, line);
         va_start(ap, msg);
         fmsg = g_strdup_vprintf(msg, ap);
         va_end(ap);
