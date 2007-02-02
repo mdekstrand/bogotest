@@ -8,12 +8,14 @@
  ****************************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <setjmp.h>
 #include <string.h>
 #include <math.h>
 
 #include <glib.h>
+#include <glib-object.h>
 
 #include "bogotest.h"
 #include "internal.h"
@@ -52,4 +54,13 @@ void _bt_assert_doubles_equal(double act, double exp, double delta,
     _bt_assert(fabs(act - exp) < delta, file, line,
             "double %f has incorrect value\n  Actual: %f\n  Expected: %f",
             expr, act, exp);
+}
+
+void _bt_assert_gvalue_is_type(GValue *val, GType type,
+        const char *file, int line, const char *expr)
+{
+    _bt_assert(G_VALUE_TYPE(val) == type,
+            file, line,
+            "type of value %s is incorrect\n  Actual: %s\n  Expected: %s",
+            expr, G_VALUE_TYPE_NAME(val), g_type_name(type));
 }

@@ -67,5 +67,11 @@ void _bt_assert_doubles_equal(double act, double exp, double delta,
         const char *file, int line, const char *expr);
 #define BT_ASSERT_DOUBLES_EQUAL(actual, expected) _bt_assert_doubles_equal( \
         (actual), (expected), BOGOTEST_DOUBLE_DELTA, __FILE__, __LINE__, #actual)
+#ifdef G_VALUE_TYPE
+void _bt_assert_gvalue_is_type(GValue *val, GType type,
+        const char *file, int line, const char *expr);
+#define BT_ASSERT_GVALUE_IS_TYPE(val, type) _bt_assert_gvalue_is_type( \
+        (val), (type), __FILE__, __LINE__, #val)
+#endif
 
 #endif

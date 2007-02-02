@@ -12,6 +12,7 @@
 #include <getopt.h>
 
 #include <glib.h>
+#include <glib-object.h>
 
 #include "bogotest.h"
 #include "internal.h"
@@ -24,6 +25,7 @@ int
 main(int argc, char *argv[])
 {
     int c;
+    g_type_init();
     while ((c = getopt(argc, argv, "vFk")) >= 0) {
         switch (c) {
         case 'v':

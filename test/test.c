@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #include "../bogotest.h"
 

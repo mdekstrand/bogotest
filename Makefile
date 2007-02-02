@@ -4,7 +4,7 @@ HEADERS = bogotest.h internal.h
 
 OBJECTS = $(SOURCES:.c=.o)
 
-CPPFLAGS += `pkg-config --cflags glib-2.0`
+CPPFLAGS += `pkg-config --cflags glib-2.0 gobject-2.0`
 
 PREFIX ?= /usr/local
 

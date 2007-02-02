@@ -22,4 +22,12 @@ BT_ASSERT_DOUBLES_EQUAL(5.3, 6.3);
 BT_ASSERT_DOUBLES_EQUAL(5.3, 5.301);
 %% PASS doubles-equal-close-good
 BT_ASSERT_DOUBLES_EQUAL(3.9, 3.9000001);
+%% PASS value-right
+GValue *val = g_new0(GValue, 1);
+g_value_init(val, G_TYPE_DOUBLE);
+BT_ASSERT_GVALUE_IS_TYPE(val, G_TYPE_DOUBLE);
+%% FAIL value-wrong
+GValue *val = g_new0(GValue, 1);
+g_value_init(val, G_TYPE_DOUBLE);
+BT_ASSERT_GVALUE_IS_TYPE(val, G_TYPE_STRING);
 %%

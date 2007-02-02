@@ -6,6 +6,11 @@ use strict;
 my $c_tmpl = 'test.c';
 my $infile = 'tests.dat';
 
+my $libs = `pkg-config --libs glib-2.0 gobject-2.0`;
+chomp $libs;
+my $cppflags = `pkg-config --cflags glib-2.0 gobject-2.0`;
+chomp $cppflags;
+
 open INFILE, $infile or die "Cannot open input file $infile";
 
 my $failures = 0;
@@ -51,8 +56,9 @@ sub run_test
     print TEXT $test_text;
     close TEXT;
 
-    system("gcc -o testprog test.c ../libbogotest.a `pkg-config --libs --cflags glib-2.0`")
-        and die "Error compiling program";
+    my $cmd = "gcc $cppflags -o testprog test.c ../libbogotest.a $libs";
+    print "$cmd\n";
+    system($cmd) and die "Error compiling program";
 
     my $testout = `./testprog 2>&1`;
     my $rv = $?;
