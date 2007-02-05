@@ -2,6 +2,14 @@
 BT_ASSERT(1);
 %% FAIL assert-false
 BT_ASSERT(0);
+%% PASS equal-true
+BT_ASSERT_EQUAL(42,42);
+%% FAIL equal-false
+BT_ASSERT_EQUAL(67,42);
+%% PASS not-equal-true
+BT_ASSERT_NOT_EQUAL(67,42);
+%% FAIL not-equal-false
+BT_ASSERT_NOT_EQUAL(42,42);
 %% PASS ptr-not-null-pass
 BT_ASSERT_PTR_NOT_NULL(23);
 %% FAIL ptr-not-null-fail

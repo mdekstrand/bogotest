@@ -56,7 +56,9 @@ void _bt_assert(int expr, const char *file, int line, const char *msg, ...);
         "pointer %s is NULL", #ptr)
 #define BT_ASSERT_PTR_NOT_NULL_MESSAGE(ptr, msg, ...) _bt_assert((ptr) != NULL, __FILE__, __LINE__, \
         msg, __VA_ARGS__)
+
 #define BT_ASSERT_EQUAL(act, exp) BT_ASSERT((act) == (exp))
+#define BT_ASSERT_NOT_EQUAL(act, rej) BT_ASSERT((act) != (rej))
 
 void _bt_assert_strings_equal(const char *act, const char *exp,
         const char *file, int line, const char *expr);
