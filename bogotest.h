@@ -65,10 +65,14 @@ void _bt_assert_strings_equal(const char *act, const char *exp,
 #define BT_ASSERT_STRINGS_EQUAL(actual, expected) _bt_assert_strings_equal( \
         (actual), (expected), __FILE__, __LINE__, #actual)
 
+int _bt_doubles_equal(double d1, double d2, double delta);
 void _bt_assert_doubles_equal(double act, double exp, double delta,
         const char *file, int line, const char *expr);
 #define BT_ASSERT_DOUBLES_EQUAL(actual, expected) _bt_assert_doubles_equal( \
         (actual), (expected), BOGOTEST_DOUBLE_DELTA, __FILE__, __LINE__, #actual)
+#define BT_ASSERT_DOUBLES_EQUAL_MSG(act, exp, msg, ...) BT_ASSERT_MESSAGE( \
+        _bt_doubles_equal((act), (exp), BOGOTEST_DOUBLE_DELTA), \
+        msg "\n  Actual: %f\n  Expected: %f", __VA_ARGS__, (act), (exp))
 #ifdef G_VALUE_TYPE
 void _bt_assert_gvalue_is_type(GValue *val, GType type,
         const char *file, int line, const char *expr);

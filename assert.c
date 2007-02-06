@@ -44,15 +44,20 @@ void _bt_assert_strings_equal(const char *act, const char *exp,
         const char *file, int line, const char *expr)
 {
     _bt_assert(!strcmp(act, exp), file, line,
-            "string %s has incorrect value\n  Actual: '%s'\n  Expected: '%s'",
+            "string '%s' has incorrect value\n  Actual: '%s'\n  Expected: '%s'",
             expr, act, exp);
+}
+
+int _bt_doubles_equal(double d1, double d2, double delta)
+{
+    return fabs(d1 - d2) < delta;
 }
 
 void _bt_assert_doubles_equal(double act, double exp, double delta,
         const char *file, int line, const char *expr)
 {
-    _bt_assert(fabs(act - exp) < delta, file, line,
-            "double %f has incorrect value\n  Actual: %f\n  Expected: %f",
+    _bt_assert(_bt_doubles_equal(act, exp, delta), file, line,
+            "double '%s' has incorrect value\n  Actual: %f\n  Expected: %f",
             expr, act, exp);
 }
 
@@ -61,6 +66,6 @@ void _bt_assert_gvalue_is_type(GValue *val, GType type,
 {
     _bt_assert(G_VALUE_TYPE(val) == type,
             file, line,
-            "type of value %s is incorrect\n  Actual: %s\n  Expected: %s",
+            "type of value '%s' is incorrect\n  Actual: %s\n  Expected: %s",
             expr, G_VALUE_TYPE_NAME(val), g_type_name(type));
 }
