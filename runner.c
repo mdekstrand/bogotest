@@ -107,21 +107,39 @@ run_test_suite(TestSuite* suite)
 gboolean
 summarize_results(void)
 {
-    gboolean success = TRUE;
+    int failures = 0;
+    int fixtures = 0;
+    int tests = 0;
+    int suites = 0;
     GList *cur;
     cur = _bt_suites;
     while (cur) {
+        GList *cfix;
         TestSuite *suite = (TestSuite*) (cur->data);
+        cfix = suite->fixtures;
+        while (cfix) {
+            TestFixture *fixture = (TestFixture*) (cfix->data);
+            tests += g_list_length(fixture->tests);
+            ++fixtures;
+            cfix = cfix->next;
+        }
         if (suite->failures) {
-            success = FALSE;
+            failures += suite->failures;
             fprintf(stderr, "Suite %s had %d failures\n",
                     suite->info->name, suite->failures);
         }
         cur = cur->next;
+        ++suites;
     }
-    if (success)
-        puts("No errors.");
-    return success;
+
+    if (failures)
+        printf("%d failures/errors in %d suites with %d tests in %d fixtures\n",
+                failures, suites, tests, fixtures);
+    else
+        printf("No errors in %d suites with %d tests in %d fixtures\n",
+                suites, tests, fixtures);
+
+    return !failures;
 }
 
 gboolean
