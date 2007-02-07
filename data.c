@@ -8,6 +8,7 @@
  ****************************************************************************/
 
 #include <setjmp.h>
+#include <stdio.h>
 
 #include <glib.h>
 
@@ -38,15 +39,42 @@ free_test_suite(TestSuite *suite)
     g_free(suite);
 }
 
+static Test*
+setup_test(BTTestInfo *tinfo)
+{
+    Test *test = g_new0(Test, 1);
+    test->info = tinfo;
+    test->result_mode = RESULT_TYPE_SUCCESS;
+    if (tinfo->params) {
+        BTTestParam *param;
+        for (param = tinfo->params; param->param; ++param) {
+            switch (param->param) {
+            case BT_PARAM_RESULT_TYPE:
+                if (!strcmp(param->value, "success")) {
+                    test->result_mode = RESULT_TYPE_SUCCESS;
+                } else if (sscanf(param->value, "exit(%d)",
+                            &(test->result_value)) == 1) {
+                    test->result_mode = RESULT_TYPE_EXIT;
+                } else if (sscanf(param->value, "signal(%d)",
+                            &(test->result_value)) == 1) {
+                    test->result_mode = RESULT_TYPE_SIGNAL;
+                }
+                break;
+            default:
+                g_warning("Invalid parameter %d", param->param);
+            }
+        }
+    }
+    return test;
+}
+
 static GList*
 initialize_tests(BTTestInfo *tests)
 {
     BTTestInfo *ctest;
     GList *tlist = NULL;
     for (ctest = tests; ctest->test; ++ctest) {
-        Test *test = g_new0(Test, 1);
-        test->info = ctest;
-        tlist = g_list_append(tlist, test);
+        tlist = g_list_append(tlist, setup_test(ctest));
     }
     return tlist;
 }

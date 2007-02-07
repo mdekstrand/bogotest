@@ -18,16 +18,23 @@ my $failures = 0;
 my $test_text = '';
 my $test_pass;
 my $test_name;
+my @test_params;
 while (<INFILE>) {
     if (m/^%%/) {
         chomp;
-        &run_test if $test_name;
         if (m/^%% (PASS|FAIL) (.*)$/) {
+            &run_test if $test_name;
             $test_text = '';
             $test_pass = ($1 eq 'PASS');
             $test_name = $2;
-        } else {
+            @test_params = ();
+        } elsif (m/^%% PARAM\s+(\w+)\s+"(.*)"\s*$/) {
+            push @test_params, "$1, \"$2\"";
+        } elsif (m/^%%$/) {
+            &run_test if $test_name;
             last;
+        } else {
+            die "Invalid marker line"
         }
     } else {
         $test_text .= $_;
@@ -55,6 +62,11 @@ sub run_test
     print TEXT "#line $line \"test.dat\"\n";
     print TEXT $test_text;
     close TEXT;
+    open PARAMS, ">params.text" or die "Cannot create params file";
+    foreach my $parm (@test_params) {
+        print PARAMS "{ $parm },\n";
+    }
+    close PARAMS;
 
     my $cmd = "gcc $cppflags -o testprog test.c ../libbogotest.a $libs";
     print "$cmd\n";
@@ -72,5 +84,6 @@ sub run_test
     }
     unlink "testprog" or die "Cannot delete testprog";
 
-    unlink "test.text" or die "Cannot delete bad file";
+    unlink "test.text" or die "Cannot delete test file";
+    unlink "params.text" or die "Cannot delete test file";
 }

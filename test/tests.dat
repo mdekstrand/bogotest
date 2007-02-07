@@ -1,4 +1,5 @@
 %% PASS assert-true
+%% PARAM BT_PARAM_RESULT_TYPE "success"
 BT_ASSERT(1);
 %% FAIL assert-false
 BT_ASSERT(0);
@@ -38,4 +39,22 @@ BT_ASSERT_GVALUE_IS_TYPE(val, G_TYPE_DOUBLE);
 GValue *val = g_new0(GValue, 1);
 g_value_init(val, G_TYPE_DOUBLE);
 BT_ASSERT_GVALUE_IS_TYPE(val, G_TYPE_STRING);
+%% PASS exit-right
+%% PARAM BT_PARAM_RESULT_TYPE "exit(1)"
+exit(1);
+%% FAIL exit-wrong
+%% PARAM BT_PARAM_RESULT_TYPE "exit(2)"
+exit(1);
+%% FAIL exit-sig
+%% PARAM BT_PARAM_RESULT_TYPE "exit(2)"
+abort();
+%% PASS signal-right
+%% PARAM BT_PARAM_RESULT_TYPE "signal(6)"
+raise(6);
+%% FAIL signal-wrong
+%% PARAM BT_PARAM_RESULT_TYPE "signal(8)"
+raise(6);
+%% FAIL signal-exit
+%% PARAM BT_PARAM_RESULT_TYPE "signal(6)"
+exit(0);
 %%

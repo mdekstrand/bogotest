@@ -9,8 +9,13 @@ void run_test(gpointer dat)
 #include "test.text"
 }
 
+BTTestParam params[] = {
+#include "params.text"
+    BT_TEST_PARAM_NULL
+};
+
 BTTestInfo tests[] = {
-    { "master", run_test },
+    { "master", run_test, params},
     BT_TEST_INFO_NULL
 };
 

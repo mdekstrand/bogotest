@@ -7,9 +7,17 @@
  * remains intact; see the file COPYING for details.
  ****************************************************************************/
 
+typedef enum {
+    RESULT_TYPE_SUCCESS,
+    RESULT_TYPE_SIGNAL,
+    RESULT_TYPE_EXIT
+} resultmode_t;
+
 typedef struct _Test {
     BTTestInfo *info;
     gboolean success;
+    resultmode_t result_mode;
+    int result_value;
 } Test;
 
 typedef struct _TestFixture {

@@ -27,23 +27,55 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
     pid_t pid;
     if (_bt_verbose)
         printf("  test: %s\n", test->info->name);
-    if (_bt_fork)
+    if (_bt_fork) {
         pid = fork();
+    } else if (test->result_mode != RESULT_TYPE_SUCCESS) {
+        fprintf(stderr, "ERROR: cannot run exit test in non-forking mode");
+        return FALSE;
+    }
     if (_bt_fork && (pid > 0)) {
         int status;
         if (waitpid(pid, &status, 0) == -1) {
             perror("run_test:waitpid");
             return FALSE;
         }
-        if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
-            fprintf(stderr, "Test failed: %s\n", test->info->name);
-            return FALSE;
+        if (WIFEXITED(status)) {
+            if (test->result_mode == RESULT_TYPE_SUCCESS &&
+                    WEXITSTATUS(status) != 0) {
+                fprintf(stderr, "Test failed: %s\n", test->info->name);
+                return FALSE;
+            } else if (test->result_mode == RESULT_TYPE_EXIT &&
+                    WEXITSTATUS(status) != test->result_value) {
+                fprintf(stderr, "Test exited with wrong code: %s\n",
+                        test->info->name);
+                fprintf(stderr, "  Actual exit code: %d\n",
+                        WEXITSTATUS(status));
+                fprintf(stderr, "  Expected exit code: %d\n",
+                        test->result_value);
+                return FALSE;
+            } else if (test->result_mode == RESULT_TYPE_SIGNAL) {
+                fprintf(stderr, "Test failed (exit): %s\n", test->info->name);
+                return FALSE;
+            }
         } else if (WIFSIGNALED(status)) {
-            fprintf(stderr, "Test terminated with signal %d: %s\n",
-                    WTERMSIG(status), test->info->name);
-            return FALSE;
-        } else if (!WIFEXITED(status)) {
-            fprintf(stderr, "Test terminated erroneously: %s\n", test->info->name);
+            if (test->result_mode == RESULT_TYPE_SIGNAL &&
+                    WTERMSIG(status) != test->result_value) {
+                fprintf(stderr, "Test terminated with wrong signal: %s\n",
+                        test->info->name);
+                fprintf(stderr, "  Actual signal: %d\n",
+                        WTERMSIG(status));
+                fprintf(stderr, "  Expected signal: %d\n",
+                        test->result_value);
+                return FALSE;
+            } else if (test->result_mode == RESULT_TYPE_EXIT ||
+                    test->result_mode == RESULT_TYPE_SUCCESS) {
+                fprintf(stderr, "Test terminated with signal %d: %s\n",
+                        WTERMSIG(status), test->info->name);
+                return FALSE;
+            }
+        } else {
+            fprintf(stderr, "Error in test (unknown exit): %s\n",
+                    test->info->name);
             return FALSE;
         }
         return TRUE;
@@ -66,7 +98,7 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
         if (teardown)
             (teardown)(fdata);
         if (_bt_fork) {
-            exit(success ? EXIT_SUCCESS : EXIT_FAILURE);
+            exit(success ? 0 : 255);
         } else {
             if (!_bt_fork && !success)
                 fprintf(stderr, "Test failed: %s\n", test->info->name);

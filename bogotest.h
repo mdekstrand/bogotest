@@ -24,11 +24,24 @@ typedef gpointer (*BTTestSetupFunc)(void);
 typedef void (*BTTestTeardownFunc)(gpointer);
 #define BT_TEST_TEARDOWN_FUNC(func) ((BTTestTeardownFunc) (func))
 
+typedef enum {
+    BT_PARAM_NULL = 0,
+    BT_PARAM_RESULT_TYPE
+} BTTestParamEnum;
+
+typedef struct _BTTestParam {
+    BTTestParamEnum param;
+    const char *value;
+} BTTestParam;
+#define BT_TEST_PARAM_NULL { BT_PARAM_NULL, NULL }
+
+
 typedef struct _BTTestInfo {
     const char *name;
     BTTestFunc test;
+    BTTestParam* params;
 } BTTestInfo;
-#define BT_TEST_INFO_NULL { NULL, NULL }
+#define BT_TEST_INFO_NULL { NULL, NULL, NULL }
 
 typedef struct _BTFixtureInfo {
     BTTestSetupFunc setup;
