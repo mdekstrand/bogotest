@@ -168,7 +168,7 @@ summarize_results(void)
         printf("%d failures/errors in %d suites with %d tests in %d fixtures\n",
                 failures, suites, tests, fixtures);
     else
-        printf("No errors in %d suites with %d tests in %d fixtures\n",
+        printf("All tests successful: %d suites with %d tests in %d fixtures\n",
                 suites, tests, fixtures);
 
     return !failures;
