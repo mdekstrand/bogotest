@@ -30,7 +30,7 @@ run_test(BTTestSetupFunc setup, BTTestTeardownFunc teardown, Test *test)
     if (_bt_fork) {
         pid = fork();
     } else if (test->result_mode != RESULT_TYPE_SUCCESS) {
-        fprintf(stderr, "ERROR: cannot run exit test in non-forking mode");
+        fprintf(stderr, "bogotest: cannot run exit test in non-forking mode\n");
         return FALSE;
     }
     if (_bt_fork && (pid > 0)) {
