@@ -25,10 +25,10 @@ install:
 	install libbogotest.a $(DESTDIR)$(PREFIX)/lib
 
 _gcheck:
-	@pkg-config --atleast-version=2.6.0 glib-2.0 || \
-		(echo "Error: glib2 >= 2.6.0 required"; false)
-	@pkg-config --atleast-version=2.6.0 gobject-2.0 || \
-		(echo "Error: gobject >= 2.6.0 required"; false)
+	@pkg-config --atleast-version=2.4.0 glib-2.0 || \
+		(echo "Error: glib2 >= 2.4.0 required"; false)
+	@pkg-config --atleast-version=2.4.0 gobject-2.0 || \
+		(echo "Error: gobject >= 2.4.0 required"; false)
 	@-echo "glib prerequisites met"
 
 libbogotest.a: _gcheck $(OBJECTS)
