@@ -8,7 +8,7 @@ CPPFLAGS += `pkg-config --cflags glib-2.0 gobject-2.0`
 
 PREFIX ?= /usr/local
 
-.PHONY: all clean check install
+.PHONY: all clean check install _gcheck
 
 all: libbogotest.a
 
@@ -24,8 +24,15 @@ install:
 	install bogotest.h $(DESTDIR)$(PREFIX)/include
 	install libbogotest.a $(DESTDIR)$(PREFIX)/lib
 
-libbogotest.a: $(OBJECTS)
-	ar rc $@ $^
+_gcheck:
+	@pkg-config --atleast-version=2.6.0 glib-2.0 || \
+		(echo "Error: glib2 >= 2.6.0 required"; false)
+	@pkg-config --atleast-version=2.6.0 gobject-2.0 || \
+		(echo "Error: gobject >= 2.6.0 required"; false)
+	@-echo "glib prerequisites met"
+
+libbogotest.a: _gcheck $(OBJECTS)
+	ar rc $@ $(OBJECTS)
 	ranlib $@
 
 %.o: %.c $(HEADERS)
