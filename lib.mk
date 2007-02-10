@@ -20,7 +20,7 @@ define c_compiler
 endef
 ifndef VERBOSE
   define compile-c
-    @echo "    [CC] $@"
+    @echo "    [CC] $<"
     @$(c_compiler)
   endef
 else
