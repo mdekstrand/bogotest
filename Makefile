@@ -2,18 +2,22 @@ SOURCES = main.c runner.c data.c assert.c
 
 HEADERS = bogotest.h internal.h
 
-OBJECTS = $(SOURCES:.c=.o)
+OBJECTS := $(SOURCES:.c=.o)
+
+DEPFILES := $(SOURCES:%.c=%.dep)
 
 CPPFLAGS += `pkg-config --cflags glib-2.0 gobject-2.0`
 
 PREFIX ?= /usr/local
 
+include lib.mk
+
 .PHONY: all clean check install _gcheck
 
-all: libbogotest.a
+all: _gcheck libbogotest.a
 
 clean:
-	rm -f libbogotest.a $(OBJECTS)
+	rm -f libbogotest.a $(OBJECTS) $(DEPFILES)
 
 check: libbogotest.a
 	(cd test && ./runtests)
@@ -29,10 +33,16 @@ _gcheck:
 		(echo "Error: glib2 >= 2.4.0 required"; false)
 	@pkg-config --atleast-version=2.4.0 gobject-2.0 || \
 		(echo "Error: gobject >= 2.4.0 required"; false)
-	@-echo "glib prerequisites met"
 
-libbogotest.a: _gcheck $(OBJECTS)
-	ar rc $@ $(OBJECTS)
-	ranlib $@
+libbogotest.a: $(OBJECTS)
+	$(make-slib)
 
-%.o: %.c $(HEADERS)
+%.o: %.c
+	$(compile-c)
+
+%.dep: %.c
+	$(depend)
+
+ifneq "$(MAKECMDGOALS)" "clean"
+  -include $(DEPFILES)
+endif
