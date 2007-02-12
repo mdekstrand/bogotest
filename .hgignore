@@ -2,3 +2,4 @@
 \.o$
 libbogotest.a
 \.dep$
+\.tgz$

@@ -3,9 +3,9 @@ RANLIB ?= ranlib
 
 ifndef VERBOSE
   define make-slib
-    @echo "    [AR] $@"
+    @echo "      [AR] $@"
     @$(AR) rc $@ $?
-    @echo "[RANLIB] $@"
+    @echo "  [RANLIB] $@"
     @$(RANLIB) $@
   endef
 else
@@ -20,7 +20,7 @@ define c_compiler
 endef
 ifndef VERBOSE
   define compile-c
-    @echo "    [CC] $<"
+    @echo "      [CC] $<"
     @$(c_compiler)
   endef
 else
@@ -37,11 +37,22 @@ define depend-impl
 endef
 ifndef VERBOSE
   define depend
-    @echo "[DEPEND] $<"
+    @echo "  [DEPEND] $<"
     @$(depend-impl)
   endef
 else
   define depend
     $(depend-impl)
+  endef
+endif
+
+ifndef VERBOSE
+  define mkdist-tarball
+    @echo "     [TAR] $@"
+    @tar czf $@ $^
+  endef
+else
+  define mkdist-tarball
+    tar czvf $@ $^
   endef
 endif
