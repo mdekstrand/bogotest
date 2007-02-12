@@ -1,0 +1,51 @@
+BOGOTEST(7)
+===========
+Michael Ekstrand <michael@elehack.net>
+0.1, 12 Feb 2007
+
+
+NAME
+----
+bogotest - unit testing framework for C code
+
+SYNOPSIS
+--------
+Test code:
+-----------------------------------------------------
+#include <bogotest.h>
+
+void my_test_fun(void)
+{
+    BT_ASSERT(1);
+}
+
+BTTestInfo tests[] = {
+    { "true test", BT_TEST_FUNC(my_test_fun), NULL },
+    BT_TEST_INFO_NULL
+};
+
+BTFixtureInfo fixtures[] = {
+    { NULL, NULL, tests },
+    BT_FIXTURE_INFO_NULL
+};
+
+BTSuiteInfo bogotest_suites[] = {
+    { "example test", fixtures },
+    BT_FIXTURE_INFO_NULL
+};
+-----------------------------------------------------
+
+Linking:
+
+	$ gcc -o tharness TESTSOURCE -lbogotest
+
+
+DESCRIPTION
+-----------
+bogotest(7) is a unit testing framework for testing C libraries and programs.
+
+
+AUTHOR
+------
+Written by Michael Ekstrand, <mailto:michael@elehack.net[]>
+

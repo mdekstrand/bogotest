@@ -3,3 +3,4 @@
 libbogotest.a
 \.dep$
 \.tgz$
+^bogotest\.7(\.xml)?$
