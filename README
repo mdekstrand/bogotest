@@ -14,6 +14,10 @@ Link against libbogotest.a, and run the resulting program.
 Note that bogotest uses glib, so the link line also needs the appropriate
 libraries for glib 2.x.
 
+REQUIREMENTS
+
+BogoTest requires GCC and GNU make to build.
+
 BOGOTEST COMMAND LINE OPTIONS
 
 BogoTest's main function currently recognizes two command line options. '-v'
