@@ -17,11 +17,11 @@
 #define BOGOTEST_DOUBLE_DELTA 0.0001
 #endif
 
-typedef void (*BTTestFunc)(gpointer);
+typedef void (*BTTestFunc)(void*);
 #define BT_TEST_FUNC(func) ((BTTestFunc) (func))
-typedef gpointer (*BTTestSetupFunc)(void);
+typedef void* (*BTTestSetupFunc)(void);
 #define BT_TEST_SETUP_FUNC(func) ((BTTestSetupFunc) (func))
-typedef void (*BTTestTeardownFunc)(gpointer);
+typedef void (*BTTestTeardownFunc)(void*);
 #define BT_TEST_TEARDOWN_FUNC(func) ((BTTestTeardownFunc) (func))
 
 typedef enum {
@@ -70,8 +70,10 @@ void _bt_assert(int expr, const char *file, int line, const char *msg, ...);
 #define BT_ASSERT_PTR_NOT_NULL_MESSAGE(ptr, msg, ...) _bt_assert((ptr) != NULL, __FILE__, __LINE__, \
         msg, __VA_ARGS__)
 
-#define BT_ASSERT_EQUAL(act, exp) BT_ASSERT((act) == (exp))
-#define BT_ASSERT_NOT_EQUAL(act, rej) BT_ASSERT((act) != (rej))
+#define BT_ASSERT_EQUAL(act, exp) BT_ASSERT_MESSAGE((act) == (exp), \
+        "%s == %s", #act, #exp)
+#define BT_ASSERT_NOT_EQUAL(act, rej) BT_ASSERT_MESSAGE((act) != (rej) \
+        "%s != %s", #act, #rej)
 
 void _bt_assert_strings_equal(const char *act, const char *exp,
         const char *file, int line, const char *expr);
@@ -86,6 +88,32 @@ void _bt_assert_doubles_equal(double act, double exp, double delta,
 #define BT_ASSERT_DOUBLES_EQUAL_MSG(act, exp, msg, ...) BT_ASSERT_MESSAGE( \
         _bt_doubles_equal((act), (exp), BOGOTEST_DOUBLE_DELTA), \
         msg "\n  Actual: %f\n  Expected: %f", __VA_ARGS__, (act), (exp))
+
+#define BT_ASSERT_INTS_EQUAL(actual, expected) do { \
+    long int i1, i2; \
+    i1 = (actual); \
+    i2 = (expected); \
+    BT_ASSERT_MESSAGE(i1 == i2, \
+            "int '%s' has incorrect value\n  Actual: %d\n  Expected: %d", \
+            #actual, i1, i2); \
+} while (0)
+
+#ifdef G_ENUM_CLASS
+#define BT_ASSERT_ENUMS_EQUAL(actual, expected, etype) do { \
+    int i1, i2; \
+    GEnumClass *cls = G_ENUM_CLASS(g_type_class_ref(etype)); \
+    GEnumValue *v1, *v2; \
+    i1 = (actual); \
+    i2 = (expected); \
+    v1 = g_enum_get_value(cls, i1); \
+    v2 = g_enum_get_value(cls, i2); \
+    g_type_class_unref(cls); \
+    BT_ASSERT_MESSAGE(i1 == i2, \
+            "int '%s' has incorrect value\n  Actual: %s\n  Expected: %s", \
+            #actual, v1 ? v1->value_name : "<unknown>", v2 ? v2->value_name : "<unknown>"); \
+} while (0)
+#endif
+
 #ifdef G_VALUE_TYPE
 void _bt_assert_gvalue_is_type(GValue *val, GType type,
         const char *file, int line, const char *expr);
