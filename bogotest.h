@@ -98,6 +98,15 @@ void _bt_assert_doubles_equal(double act, double exp, double delta,
             #actual, i1, i2); \
 } while (0)
 
+#define BT_ASSERT_CHARS_EQUAL(actual, expected) do { \
+    long int i1, i2; \
+    i1 = (actual); \
+    i2 = (expected); \
+    BT_ASSERT_MESSAGE(i1 == i2, \
+            "int '%s' has incorrect value\n  Actual: '%c' (%d)\n  Expected: '%c' (%d)", \
+            #actual, isprint(i1) ? i1 : 0, i1, isprint(i2) ? i2 : 0, i2); \
+} while (0)
+
 #ifdef G_ENUM_CLASS
 #define BT_ASSERT_ENUMS_EQUAL(actual, expected, etype) do { \
     int i1, i2; \
