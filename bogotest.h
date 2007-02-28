@@ -121,7 +121,7 @@ void _bt_assert_doubles_equal(double act, double exp, double delta,
     g_type_class_unref(__cls); \
     BT_ASSERT_MESSAGE(__i1 == __i2, \
             "enum '%s' has incorrect value\n  Actual: %s\n  Expected: %s", \
-            (#actual, __v1 ? __v1->value_name : "<unknown>"), \
+            #actual, (__v1 ? __v1->value_name : "<unknown>"), \
             (__v2 ? __v2->value_name : "<unknown>")); \
 } while (0)
 #endif
