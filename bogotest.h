@@ -24,6 +24,8 @@ typedef void* (*BTTestSetupFunc)(void);
 typedef void (*BTTestTeardownFunc)(void*);
 #define BT_TEST_TEARDOWN_FUNC(func) ((BTTestTeardownFunc) (func))
 
+gboolean bt_run_is_verbose(void);
+
 typedef enum {
     BT_PARAM_NULL = 0,
     BT_PARAM_RESULT_TYPE
