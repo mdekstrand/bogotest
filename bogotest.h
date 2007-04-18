@@ -24,6 +24,8 @@ typedef void* (*BTTestSetupFunc)(void);
 typedef void (*BTTestTeardownFunc)(void*);
 #define BT_TEST_TEARDOWN_FUNC(func) ((BTTestTeardownFunc) (func))
 
+gboolean bt_run_is_verbose(void);
+
 typedef enum {
     BT_PARAM_NULL = 0,
     BT_PARAM_RESULT_TYPE
@@ -90,27 +92,39 @@ void _bt_assert_doubles_equal(double act, double exp, double delta,
         msg "\n  Actual: %f\n  Expected: %f", __VA_ARGS__, (act), (exp))
 
 #define BT_ASSERT_INTS_EQUAL(actual, expected) do { \
-    long int i1, i2; \
-    i1 = (actual); \
-    i2 = (expected); \
-    BT_ASSERT_MESSAGE(i1 == i2, \
+    long int __i1, __i2; \
+    __i1 = (actual); \
+    __i2 = (expected); \
+    BT_ASSERT_MESSAGE(__i1 == __i2, \
             "int '%s' has incorrect value\n  Actual: %d\n  Expected: %d", \
-            #actual, i1, i2); \
+            #actual, __i1, __i2); \
+} while (0)
+
+#define BT_ASSERT_CHARS_EQUAL(actual, expected) do { \
+    int __i1, __i2; \
+    __i1 = (actual); \
+    __i2 = (expected); \
+    BT_ASSERT_MESSAGE(__i1 == __i2, \
+            "int '%s' has incorrect value\n  Actual: '%c' (%d)\n  Expected: '%c' (%d)", \
+            #actual, \
+            (isprint(__i1) ? __i1 : 0), \
+            (__i1, isprint(__i2) ? __i2 : 0), __i2); \
 } while (0)
 
 #ifdef G_ENUM_CLASS
 #define BT_ASSERT_ENUMS_EQUAL(actual, expected, etype) do { \
-    int i1, i2; \
-    GEnumClass *cls = G_ENUM_CLASS(g_type_class_ref(etype)); \
-    GEnumValue *v1, *v2; \
-    i1 = (actual); \
-    i2 = (expected); \
-    v1 = g_enum_get_value(cls, i1); \
-    v2 = g_enum_get_value(cls, i2); \
-    g_type_class_unref(cls); \
-    BT_ASSERT_MESSAGE(i1 == i2, \
-            "int '%s' has incorrect value\n  Actual: %s\n  Expected: %s", \
-            #actual, v1 ? v1->value_name : "<unknown>", v2 ? v2->value_name : "<unknown>"); \
+    int __i1, __i2; \
+    GEnumClass *__cls = G_ENUM_CLASS(g_type_class_ref(etype)); \
+    GEnumValue *__v1, *__v2; \
+    __i1 = (actual); \
+    __i2 = (expected); \
+    __v1 = g_enum_get_value(__cls, __i1); \
+    __v2 = g_enum_get_value(__cls, __i2); \
+    g_type_class_unref(__cls); \
+    BT_ASSERT_MESSAGE(__i1 == __i2, \
+            "enum '%s' has incorrect value\n  Actual: %s\n  Expected: %s", \
+            #actual, (__v1 ? __v1->value_name : "<unknown>"), \
+            (__v2 ? __v2->value_name : "<unknown>")); \
 } while (0)
 #endif
 

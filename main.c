@@ -49,3 +49,9 @@ main(int argc, char *argv[])
     else
         return EXIT_FAILURE;
 }
+
+gboolean
+bt_run_is_verbose(void)
+{
+    return _bt_verbose;
+}
