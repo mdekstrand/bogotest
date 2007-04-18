@@ -43,6 +43,11 @@ Linking:
 DESCRIPTION
 -----------
 bogotest(7) is a unit testing framework for testing C libraries and programs.
+It provides a variety of features and concepts taken from other unit testing
+mechanisms.  Its core features include:
+
+* Test fixtures with setup and teardown functions run for each test
+* Forks for each test to catch segfaults, aborts, etc. in tests
 
 
 AUTHOR

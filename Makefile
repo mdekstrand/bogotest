@@ -27,7 +27,7 @@ INCLUDEDIR ?= $(PREFIX)/include
 
 include lib.mk
 
-.PHONY: all clean check install doc realclean dist _gcheck
+.PHONY: all clean check install doc veryclean dist _gcheck
 
 all: _gcheck libbogotest.a
 	@echo "Build successful."
@@ -50,7 +50,7 @@ clean:
 	$(call do-clean,$(TARBALL))
 	$(call do-clean,$(DOC_TEMPFILES))
 
-realclean: clean
+veryclean: clean
 	$(call do-clean,$(MANPAGES))
 
 check: libbogotest.a
@@ -81,11 +81,11 @@ _gcheck:
 ifndef VERBOSE
   define build-manpage
     @echo "[ASCIIDOC] $<"
-    @a2x -f manpage $<
+    @a2x -d manpage -f manpage $<
   endef
 else
   define build-manpage
-    a2x -f manpage $<
+    a2x -d manpage -f manpage $<
   endef
 endif
 %.7: %.7.txt
@@ -100,6 +100,6 @@ libbogotest.a: $(OBJECTS)
 %.dep: %.c
 	$(depend)
 
-ifneq "$(findstring clean,$(filter clean realclean,$(MAKECMDGOALS)))" "clean"
+ifneq "$(findstring clean,$(filter clean veryclean,$(MAKECMDGOALS)))" "clean"
   -include $(DEPFILES)
 endif
