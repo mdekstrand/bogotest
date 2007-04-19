@@ -74,7 +74,7 @@ void _bt_assert(int expr, const char *file, int line, const char *msg, ...);
 
 #define BT_ASSERT_EQUAL(act, exp) BT_ASSERT_MESSAGE((act) == (exp), \
         "%s == %s", #act, #exp)
-#define BT_ASSERT_NOT_EQUAL(act, rej) BT_ASSERT_MESSAGE((act) != (rej) \
+#define BT_ASSERT_NOT_EQUAL(act, rej) BT_ASSERT_MESSAGE((act) != (rej), \
         "%s != %s", #act, #rej)
 
 void _bt_assert_strings_equal(const char *act, const char *exp,
