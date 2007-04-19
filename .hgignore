@@ -3,4 +3,4 @@
 libbogotest.a
 \.dep$
 \.tgz$
-^bogotest\.7(\.xml)?$
+^bogotest\.7(\.(xml|html))?$
