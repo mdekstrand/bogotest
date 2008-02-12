@@ -6,7 +6,7 @@ HEADERS = bogotest.h internal.h
 
 OBJECTS = $(SOURCES:.c=.o)
 
-DEPFILES = $(SOURCES:%.c=%.dep)
+DEPFILES = $(SOURCES:%.c=.%.d)
 
 MANPAGES = bogotest.7
 
@@ -97,7 +97,7 @@ libbogotest.a: $(OBJECTS)
 %.o: %.c
 	$(compile-c)
 
-%.dep: %.c
+.%.d: %.c
 	$(depend)
 
 ifneq "$(findstring clean,$(filter clean veryclean,$(MAKECMDGOALS)))" "clean"

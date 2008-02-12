@@ -1,6 +1,7 @@
 \.swp$
 \.o$
 libbogotest.a
-\.dep$
+(^|/)\.\w*\.d$
 \.tgz$
+~$
 ^bogotest\.7(\.(xml|html))?$
