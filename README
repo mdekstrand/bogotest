@@ -26,8 +26,9 @@ test).
 
 GENERAL HINTS
 
-I find it useful to just clone the bogotest tree in to a subdirectory of my
-project's source tree and reference it there.
+I find it useful to just clone the bogotest tree in to a subdirectory
+of my project's source tree and reference it there.  Mercurial
+submodules can work well for this.
 
 INSTALLATION
 
@@ -60,8 +61,8 @@ void test_equal(fixture_t *fix)
 {
     fix->a = 42;
     fix->b = 42;
-    BT_ASSERT(a == b);
-    BT_ASSERT_EQUAL(a, 42);
+    BT_ASSERT(fix->a == fix->b);
+    BT_ASSERT_EQUAL(fix->a, 42);
 }
 
 BTTestInfo tests[] = {
